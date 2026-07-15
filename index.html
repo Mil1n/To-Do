@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To-Do список</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app" aria-labelledby="app-title">
+    <section class="hero">
+      <p class="eyebrow">Список задач</p>
+      <h1 id="app-title">To-Do</h1>
+      <p class="subtitle">Добавляйте задачи, отмечайте выполненные и храните список в localStorage.</p>
+    </section>
+
+    <form class="task-form" id="task-form" autocomplete="off">
+      <label class="visually-hidden" for="task-input">Новая задача</label>
+      <input id="task-input" type="text" placeholder="Например: купить продукты" maxlength="120" required />
+      <button type="submit">Добавить</button>
+    </form>
+
+    <section class="toolbar" aria-label="Статистика задач">
+      <span id="total-count">Всего: 0</span>
+      <span id="done-count">Выполнено: 0</span>
+      <button class="secondary" id="clear-done" type="button">Удалить выполненные</button>
+    </section>
+
+    <ul class="task-list" id="task-list" aria-live="polite"></ul>
+    <p class="empty-state" id="empty-state">Пока задач нет. Добавьте первую задачу выше.</p>
+  </main>
+
+  <template id="task-template">
+    <li class="task-item">
+      <label class="task-content">
+        <input class="task-checkbox" type="checkbox" />
+        <span class="task-title"></span>
+      </label>
+      <button class="delete-button" type="button" aria-label="Удалить задачу">×</button>
+    </li>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
