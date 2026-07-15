@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#4f46e5" />
+  <title>To-Do список</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app" aria-labelledby="app-title">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Список задач</p>
+        <h1 id="app-title">To-Do</h1>
+        <p class="subtitle">Планируйте, сортируйте, импортируйте задачи и сохраняйте прогресс в браузере.</p>
+      </div>
+      <button class="icon-button" id="theme-toggle" type="button" aria-label="Переключить тему">🌙</button>
+    </section>
+
+    <form class="task-form" id="task-form" autocomplete="off">
+      <label class="visually-hidden" for="task-input">Новая задача</label>
+      <input id="task-input" type="text" placeholder="Например: купить продукты" maxlength="120" required />
+
+      <label class="visually-hidden" for="category-select">Категория</label>
+      <select id="category-select">
+        <option>Личное</option>
+        <option>Работа</option>
+        <option>Учёба</option>
+        <option>Дом</option>
+        <option>Покупки</option>
+      </select>
+
+      <label class="visually-hidden" for="priority-select">Приоритет</label>
+      <select id="priority-select">
+        <option value="low">Низкий</option>
+        <option value="medium" selected>Средний</option>
+        <option value="high">Высокий</option>
+      </select>
+
+      <label class="visually-hidden" for="deadline-input">Срок выполнения</label>
+      <input id="deadline-input" type="date" />
+
+      <button type="submit">Добавить</button>
+    </form>
+
+    <section class="toolbar" aria-label="Управление задачами">
+      <div class="stats" aria-label="Статистика задач">
+        <span id="total-count">Всего: 0</span>
+        <span id="done-count">Выполнено: 0</span>
+        <span id="active-count">Активно: 0</span>
+      </div>
+
+      <div class="progress-wrap" aria-label="Прогресс выполнения">
+        <progress id="progress-bar" value="0" max="100"></progress>
+        <span id="progress-text">0%</span>
+      </div>
+
+      <div class="filters" aria-label="Фильтры задач">
+        <button class="filter-button active" type="button" data-filter="all" aria-pressed="true">Все</button>
+        <button class="filter-button" type="button" data-filter="active" aria-pressed="false">Активные</button>
+        <button class="filter-button" type="button" data-filter="completed" aria-pressed="false">Выполненные</button>
+      </div>
+
+      <label class="sort-label" for="sort-select">Сортировка</label>
+      <select id="sort-select">
+        <option value="newest">Сначала новые</option>
+        <option value="oldest">Сначала старые</option>
+        <option value="priority">По приоритету</option>
+        <option value="deadline">По сроку</option>
+      </select>
+    </section>
+
+    <section class="actions" aria-label="Дополнительные действия">
+      <button class="secondary" id="clear-done" type="button">Удалить выполненные</button>
+      <button class="secondary" id="export-json" type="button">Экспорт JSON</button>
+      <label class="secondary file-label" for="import-json">Импорт JSON</label>
+      <input class="visually-hidden" id="import-json" type="file" accept="application/json,.json" />
+    </section>
+
+    <ul class="task-list" id="task-list" aria-live="polite"></ul>
+    <p class="empty-state" id="empty-state">Пока задач нет. Добавьте первую задачу выше.</p>
+  </main>
+
+  <dialog class="edit-dialog" id="edit-dialog">
+    <form method="dialog" id="edit-form">
+      <h2>Редактировать задачу</h2>
+      <label for="edit-title">Название</label>
+      <input id="edit-title" type="text" maxlength="120" required />
+      <label for="edit-category">Категория</label>
+      <select id="edit-category"></select>
+      <label for="edit-priority">Приоритет</label>
+      <select id="edit-priority">
+        <option value="low">Низкий</option>
+        <option value="medium">Средний</option>
+        <option value="high">Высокий</option>
+      </select>
+      <label for="edit-deadline">Срок</label>
+      <input id="edit-deadline" type="date" />
+      <div class="dialog-actions">
+        <button class="secondary" value="cancel" type="button" id="cancel-edit">Отмена</button>
+        <button value="default" type="submit">Сохранить</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="undo-toast" id="undo-toast" role="status" hidden>
+    <span id="undo-text">Задача удалена.</span>
+    <button id="undo-button" type="button">Отменить</button>
+  </div>
+
+  <template id="task-template">
+    <li class="task-item">
+      <label class="task-content">
+        <input class="task-checkbox" type="checkbox" />
+        <span class="task-main">
+          <span class="task-title"></span>
+          <span class="task-meta">
+            <span class="task-category"></span>
+            <span class="task-priority"></span>
+            <span class="task-deadline"></span>
+          </span>
+        </span>
+      </label>
+      <div class="task-actions">
+        <button class="edit-button" type="button">✏️</button>
+        <button class="delete-button" type="button" aria-label="Удалить задачу">×</button>
+      </div>
+    </li>
+  </template>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
