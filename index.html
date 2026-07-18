@@ -43,14 +43,38 @@
       <label class="visually-hidden" for="deadline-input">Срок выполнения</label>
       <input id="deadline-input" type="date" />
 
+      <label class="visually-hidden" for="repeat-select">Повтор задачи</label>
+      <select id="repeat-select">
+        <option value="none">Без повтора</option>
+        <option value="daily">Каждый день</option>
+        <option value="weekly">Каждую неделю</option>
+        <option value="monthly">Каждый месяц</option>
+      </select>
+
       <button type="submit">Добавить</button>
     </form>
+
+    <section class="customize-panel" aria-label="Настройки списка">
+      <label for="search-input">Поиск</label>
+      <input id="search-input" type="search" placeholder="Найти по названию, категории или сроку" />
+
+      <form class="category-form" id="category-form" autocomplete="off">
+        <label for="new-category-input">Новая категория</label>
+        <input id="new-category-input" type="text" placeholder="Например: Спорт" maxlength="32" />
+        <button class="secondary" type="submit">Добавить категорию</button>
+      </form>
+
+      <label for="accent-input">Акцент</label>
+      <input id="accent-input" type="color" value="#4f46e5" />
+    </section>
 
     <section class="toolbar" aria-label="Управление задачами">
       <div class="stats" aria-label="Статистика задач">
         <span id="total-count">Всего: 0</span>
         <span id="done-count">Выполнено: 0</span>
         <span id="active-count">Активно: 0</span>
+        <span id="today-count">Сегодня: 0</span>
+        <span id="overdue-count">Просрочено: 0</span>
       </div>
 
       <div class="progress-wrap" aria-label="Прогресс выполнения">
@@ -66,6 +90,7 @@
 
       <label class="sort-label" for="sort-select">Сортировка</label>
       <select id="sort-select">
+        <option value="manual">Вручную</option>
         <option value="newest">Сначала новые</option>
         <option value="oldest">Сначала старые</option>
         <option value="priority">По приоритету</option>
@@ -74,11 +99,25 @@
     </section>
 
     <section class="actions" aria-label="Дополнительные действия">
+      <button class="secondary" id="bulk-complete" type="button">Выполнить выбранные</button>
+      <button class="secondary" id="bulk-delete" type="button">Удалить выбранные</button>
       <button class="secondary" id="clear-done" type="button">Удалить выполненные</button>
       <button class="secondary" id="export-json" type="button">Экспорт JSON</button>
       <label class="secondary file-label" for="import-json">Импорт JSON</label>
       <input class="visually-hidden" id="import-json" type="file" accept="application/json,.json" />
     </section>
+
+    <section class="dashboard" aria-label="История продуктивности">
+      <h2>📈 Продуктивность</h2>
+      <div class="dashboard-grid">
+        <article><strong id="completed-today">0</strong><span>сделано сегодня</span></article>
+        <article><strong id="completed-week">0</strong><span>за 7 дней</span></article>
+        <article><strong id="best-category">—</strong><span>лучшая категория</span></article>
+      </div>
+    </section>
+
+    <p class="offline-status" id="offline-status" hidden>Вы офлайн — приложение продолжит работать из кеша.</p>
+    <button class="secondary update-button" id="update-app" type="button" hidden>Обновить приложение</button>
 
     <ul class="task-list" id="task-list" aria-live="polite"></ul>
     <p class="empty-state" id="empty-state">Пока задач нет. Добавьте первую задачу выше.</p>
@@ -99,6 +138,13 @@
       </select>
       <label for="edit-deadline">Срок</label>
       <input id="edit-deadline" type="date" />
+      <label for="edit-repeat">Повтор</label>
+      <select id="edit-repeat">
+        <option value="none">Без повтора</option>
+        <option value="daily">Каждый день</option>
+        <option value="weekly">Каждую неделю</option>
+        <option value="monthly">Каждый месяц</option>
+      </select>
       <div class="dialog-actions">
         <button class="secondary" value="cancel" type="button" id="cancel-edit">Отмена</button>
         <button value="default" type="submit">Сохранить</button>
@@ -112,7 +158,8 @@
   </div>
 
   <template id="task-template">
-    <li class="task-item">
+    <li class="task-item" draggable="true">
+      <input class="bulk-checkbox" type="checkbox" aria-label="Выбрать задачу" />
       <label class="task-content">
         <input class="task-checkbox" type="checkbox" />
         <span class="task-main">
@@ -121,6 +168,8 @@
             <span class="task-category"></span>
             <span class="task-priority"></span>
             <span class="task-deadline"></span>
+            <span class="task-repeat"></span>
+            <span class="task-status"></span>
           </span>
         </span>
       </label>
